@@ -11,14 +11,19 @@ const createProduct = async (req, res) => {
 
   try {
     const product = new Product(req.body);
-    await product.save();
-    const productsByCategoryName = await Category.findOne({
-      _id: req.body.categories
-    });
+ 
     const productsByCategorySubName = await Subcategory.findOne({
       _id:  req.body.sub_categories
     });
-    
+
+    const productsByCategoryName = await Category.findOne({
+      _id: productsByCategorySubName.category
+    });
+    if(!productsByCategoryName)
+      return res.status(404).json({ error: 'no category for this profile' });
+
+    product.categories = productsByCategoryName._id
+    await product.save();
 
     productsByCategoryName.id_prod.push(product._id)
     productsByCategorySubName.id_prod.push(product._id)
@@ -27,14 +32,14 @@ const createProduct = async (req, res) => {
     return res.status(201).json(product);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: 'Failed to create product' });
+    return res.status(500).json({ error: 'Failed to create product' });
   }
 };
 const gegtImagesNames = async (req, res) => {
   
   try{
 
-    return res.status(201).json(req.files);
+    return res.status(201).json(req.file);
 
   }catch(err){
     console.log(err);
@@ -174,6 +179,7 @@ const searchSimilarProduct = async (req, res) => {
 
 
 const fs = require('fs');
+const { log } = require('console');
 
 const deleteImages = async (req, res) => {
 

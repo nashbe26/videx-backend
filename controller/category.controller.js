@@ -1,4 +1,5 @@
 const Category = require('../models/category');
+const Subcategory = require('../models/sub_category');
 
 // Controller functions to handle category related operations
 
@@ -16,10 +17,15 @@ const getAllCategories = async (req, res) => {
 const createCategory = async (req, res) => {
   const { name } = req.body.values;
   const { subcategories } = req.body;
-  console.log(name,
-    subcategories);
+
   try {
     const category = await Category.create({ name,subcategories });
+    subcategories.map(async x=>{
+      const scategory = await Subcategory.findOne({_id:x});
+      scategory.category = category._id
+      await scategory.save()
+    })
+    
     res.status(201).json(category);
   } catch (error) {
     console.log(error);
