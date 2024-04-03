@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/public",express.static(path.join(__dirname, 'public')));
 
-app.use('/api/v1', indexRouter);
+app.use('/coreApi/v1', indexRouter);
 
 app.use(passport.initialize());
 passport.use('jwt', strategies.jwt);
@@ -50,8 +50,6 @@ app.use(function (err, req, res, next) {
 	// render the error page
 	res.status(err.status || 500).json({ message: err.message });
 });
-
-
 
 module.exports = app;
 

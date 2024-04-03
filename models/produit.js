@@ -1,55 +1,101 @@
 const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
+const schema = new mongoose.Schema({
+  removed: {
+    type: Boolean,
+    default: false,
   },
+  enabled: {
+    type: Boolean,
+    default: true,
+  },
+
+  productCategory: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'ProductCategory',
+    required: true,
+    autopopulate: true,
+  },
+  suppliers: [{ type: mongoose.Schema.ObjectId, ref: 'Supplier' }],
+  name: {
+    type: String,
+    required: true,
+  },
+  description: String,
+  number: {
+    type: Number,
+  },
+  title: String,
+  tags: [String],
+  headerImage: String,
+  photo: String,
+  images: [
+    {
+      id: String,
+      name: String,
+      path: String,
+      description: String,
+      isPublic: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
+  files: [
+    {
+      id: String,
+      name: String,
+      path: String,
+      description: String,
+      isPublic: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
+  priceBeforeTax: {
+    type: Number,
+  },
+  taxRate: { type: Number, default: 0 },
   price: {
     type: Number,
-    required: true
+    required: true,
   },
-  statusProd:{
+  currency: {
     type: String,
-      enum: ['en arrivage','en stock','épuisé'],
-      default: 'en stock',
-    
-  }
-,
-  categories:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category'
+    uppercase: true,
+    required: true,
   },
-  sub_categories: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subcategory'
+  customField: [
+    {
+      fieldName: {
+        type: String,
+        trim: true,
+        lowercase: true,
+      },
+      fieldType: {
+        type: String,
+        trim: true,
+        lowercase: true,
+        default: 'string',
+      },
+      fieldValue: {},
+    },
+  ],
+  created: {
+    type: Date,
+    default: Date.now,
   },
-  quantity: {
-    type: Number,
-    min: 0
+  updated: {
+    type: Date,
+    default: Date.now,
   },
-  is_balance: {
+  isPublic: {
     type: Boolean,
-    default:false
+    default: true,
   },
-  max_quantity:{
-    type: Number
-  },
-  max_weight:{
-    type: Number
-  },
-  weight: {
-    type: String,
-  },
-  photos: {
-    type: [String],
-  },
-  description:{
-    type:String
-  }
-
 });
 
-const Product = mongoose.model('Product', productSchema);
+schema.plugin(require('mongoose-autopopulate'));
 
-module.exports = Product;
+module.exports = mongoose.model('Product', schema);

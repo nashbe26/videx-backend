@@ -11,7 +11,8 @@ const router = express.Router();
 router.param('userId', userController.load);
 
 router.get('/get-all-User',authorize(SUPER_ADMIN),userController.getAllUser);
-router.put('/modify-user',authorize([LOGGED_USER,SUPER_ADMIN]),validateUpdate,userController.updateUser);
+router.put('/update-user',authorize([LOGGED_USER,SUPER_ADMIN]),userController.updateUser);
+router.put('/update-password',authorize([LOGGED_USER,SUPER_ADMIN]),userController.updateUserPassword);
 router.get('/get-user',authorize([LOGGED_USER,SUPER_ADMIN]),userController.loggedIn);
 router.post('/update-user-photo',authorize([LOGGED_USER,SUPER_ADMIN]),uploadImages,userController.updatePhoto);
 router.delete('/delete-user/:ids',authorize(SUPER_ADMIN),userController.deleteUser);

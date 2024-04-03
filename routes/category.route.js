@@ -4,6 +4,7 @@ const categoryController = require('../controller/category.controller');
 const { SUPER_ADMIN, LOGGED_USER, authorize } = require('../middleware/jwt.auth');
 
 router.get('/get-all', categoryController.getAllCategories);
+router.get('/get-all-type', categoryController.getAllCategoriesByType);
 router.post('/create-category',authorize(SUPER_ADMIN), categoryController.createCategory);
 router.get('/get-one/:categoryId', categoryController.getCategoryById);
 router.put('/update-one/:categoryId', authorize(SUPER_ADMIN),categoryController.updateCategory);

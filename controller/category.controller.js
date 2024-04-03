@@ -6,12 +6,26 @@ const Subcategory = require('../models/sub_category');
 // Get all categories
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find().populate('subcategories');
+    const categories = await Category.find();
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving categories' });
   }
 };
+
+const getAllCategoriesByType = async (req, res) => {
+    try {
+      let query = { removed: false };
+        if (req.query.type) {
+            query.type = req.query.type;
+        }
+        const categories = await Category.find({type:req.query.type,removed:false});
+        res.json(categories);
+    } catch (error) {
+        res.status(500).json({ message: 'Error retrieving categories' });
+    }
+};
+
 
 // Create a new category
 const createCategory = async (req, res) => {
@@ -62,6 +76,15 @@ const updateCategory = async (req, res) => {
     if (!updatedCategory) {
       return res.status(404).json({ message: 'Category not found' });
     }
+
+    console.log(subcategories);
+    subcategories.map(async x=>{
+      const scategory = await Subcategory.findOne({_id:x});
+      console.log("dsdsdsd",scategory);
+      scategory.category = updatedCategory._id
+      await scategory.save()
+    });
+
     res.json(updatedCategory);
   } catch (error) {
     res.status(500).json({ message: 'Error updating category' });
@@ -77,6 +100,7 @@ const updateSubCategory = async (req, res) => {
         { $push: { subcategories: { $each: subcategories } } },
         { new: true }
       );
+
       if (!updatedCategory) {
         return res.status(404).json({ message: 'Category not found' });
       }
@@ -105,5 +129,6 @@ module.exports = {
   getCategoryById,
   updateCategory,
   deleteCategory,
-  updateSubCategory
+  updateSubCategory,
+  getAllCategoriesByType
 };

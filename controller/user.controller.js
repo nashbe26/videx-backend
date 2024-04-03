@@ -1,5 +1,5 @@
 const User = require('../models/user');
-
+const bcrypt = require('bcrypt')
 const load = async (req, res, next, id) => {
 
     try {
@@ -33,10 +33,32 @@ const updateUser = async (req,res,next) =>{
     try{
 
         let modifyUser = req.body
+
         let updateUser = await User.findByIdAndUpdate(req.route.meta.user._id, { ...modifyUser },{returnOriginal:false});
         return res.status(200).json({user:updateUser})
 
     }catch(err){
+        console.log(err);
+        res.status(401).json({err})
+    }
+
+}
+
+const updateUserPassword = async (req,res,next) =>{
+
+    try{
+
+        let modifyUser = req.body
+        if (modifyUser.password.length > 0 && modifyUser.password) {
+            const hashedPassword = await bcrypt.hash(modifyUser.password, 10);
+            modifyUser.password = hashedPassword;
+        }
+
+        let updateUser = await User.findByIdAndUpdate(req.route.meta.user._id, { ...modifyUser },{returnOriginal:false});
+        return res.status(200).json({user:updateUser})
+
+    }catch(err){
+        console.log(err);
         res.status(401).json({err})
     }
 
@@ -122,5 +144,6 @@ module.exports={
     load,
     loggedIn,
     addToFav,
-    deleteToFav
+    deleteToFav,
+    updateUserPassword
 }

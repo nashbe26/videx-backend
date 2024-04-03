@@ -6,7 +6,8 @@ const { validateUser, validateLogin } = require('../middleware/auth.middleware')
 const router = express.Router();
 
 
-router.post('/register',validateUser,register);
+router.post('/register',register);
+router.post('/forgot-password',register);
 router.post('/login',validateLogin,login);
 router.post('/loginAdmin',validateLogin,loginAdmin);
 

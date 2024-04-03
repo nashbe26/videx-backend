@@ -1,20 +1,77 @@
 const mongoose = require('mongoose');
 
-const categorySchema = new mongoose.Schema({
+const productCategorySchema = new mongoose.Schema({
+  removed: {
+    type: Boolean,
+    default: false,
+  },
+  enabled: {
+    type: Boolean,
+    default: true,
+  },
+
   name: {
     type: String,
-    required: true
+    required: true,
   },
-  subcategories: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Subcategory'
-  }],
-  id_prod:[{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product'
-    }]
+  description: String,
+  color: {
+    type: String,
+    lowercase: true,
+    trim: true,
+    required: true,
+  },
+  hasParentCategory: {
+    type: Boolean,
+    default: false,
+  },
+  parentCategory: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'ProductCategory',
+  },
+
+  title: String,
+  tags: [String],
+  icon: String,
+  type: String,
+  headerImage: String,
+  photo: String,
+  images: [
+    {
+      id: String,
+      name: String,
+      path: String,
+      description: String,
+      isPublic: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
+  files: [
+    {
+      id: String,
+      name: String,
+      path: String,
+      description: String,
+      isPublic: {
+        type: Boolean,
+        default: false,
+      },
+    },
+  ],
+  created: {
+    type: Date,
+    default: Date.now,
+  },
+  updated: {
+    type: Date,
+    default: Date.now,
+  },
+  isPublic: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const Category = mongoose.model('Category', categorySchema);
-
-module.exports = Category;  
+module.exports = mongoose.model('ProductCategory', productCategorySchema);
