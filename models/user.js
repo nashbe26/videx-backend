@@ -33,7 +33,6 @@ const userSchema = new mongoose.Schema({
       }],
       password: {
         type: String,
-        required: true,
         minlength: 6,
         maxlength: 128
       },
@@ -46,6 +45,13 @@ const userSchema = new mongoose.Schema({
       },
       address:{
         type: String,
+      },
+      photo:{
+        type:String
+      },
+      googleAuth:{
+        id:{type:String},
+        accessToken:{type:String}
       }
 });
 
