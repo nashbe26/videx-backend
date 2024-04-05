@@ -16,7 +16,7 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 router.get('/google/callback', passport.authenticate("google"), async (req, res) => {
   console.log(req.user,"await User.findAndGenerateToken(req.body)");
   //const {user,accessToken} = await User.findAndGenerateToken(req.body);
-  res.redirect('http://localhost:3000/social-verif/'+req.user.googleAuth.accessToken)
+  res.redirect('http://www.auto-videx.com/social-verif/'+req.user.googleAuth.accessToken)
 });
 
 module.exports = router;
