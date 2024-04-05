@@ -17,7 +17,7 @@ const appSecret = '24f3aab15fd4ac7d99a8c87e62600ea0';
 const options = {
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: 'http://localhost:3010/coreApi/v1/auth/google/callback',
+    callbackURL: 'https://www.auto-videx.com/coreApi/v1/auth/google/callback',
     scope: ['profile', 'email', 'https://www.googleapis.com/auth/userinfo.profile'],
     state: true
 };

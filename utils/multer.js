@@ -7,7 +7,6 @@ const uploadImages = multer({
 			callback(null, './public/images');
 		},
 		filename: function (req, file, callback) {
-			console.log(file,"fileeeeee");
 			file.originalname = Date.now() + '--' + file.originalname.replaceAll(' ', '_');
 			if (req.filesPath) {
 				req.filesPath = ['public/images/' + file.originalname, ...req.filesPath];
