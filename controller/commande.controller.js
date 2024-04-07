@@ -10,7 +10,7 @@ const createCommande = async (req, res) => {
       const nouvelleCommande = new Commande(req.body);
       const url ="https://admin.audo-videx.com/commande/"+ nouvelleCommande._id
       await qrCodeGenerator.toFile(path.join(__dirname,'..', 'public', 'qrcodes', nouvelleCommande._id+'.png'), url);
-      const qrImagePath = 'https://www.auto-videx.com/public/qrcodes/'+nouvelleCommande._id+'.png';
+      const qrImagePath = 'https://www.audo-videx.com/public/qrcodes/'+nouvelleCommande._id+'.png';
       
 
       nouvelleCommande.user_id = req.route.meta.user._id;

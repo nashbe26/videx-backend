@@ -17,7 +17,7 @@ const appSecret = '24f3aab15fd4ac7d99a8c87e62600ea0';
 const options = {
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: 'https://www.auto-videx.com/coreApi/v1/auth/google/callback',
+    callbackURL: 'https://www.auto-videx.com/auth/google/callback',
     scope: ['profile', 'email', 'https://www.googleapis.com/auth/userinfo.profile'],
     state: true
 };
@@ -64,7 +64,7 @@ const googleStrategy = new GoogleStrategy(options, async (accessToken, refreshTo
 const facebookStrategy = new FacebookStrategy({
     clientID: appId,
     clientSecret: appSecret,
-    callbackURL: 'http://localhost:3010/api/v1/auth/facebook/callback',
+    callbackURL: 'https://www.audo-videx.com/api/v1/auth/facebook/callback',
     profileFields: ['id', 'displayName', 'photos', 'email'], // Specify the profile fields you need
     scope: ['user_photos', 'user_profile'],
     state: true,

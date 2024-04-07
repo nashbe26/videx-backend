@@ -29,6 +29,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^4.0.1",
-    "qrcode": "^1.5.3"
+    "qrcode": "^1.5.3",
+    "swiper": "^11.1.0"
   }
 }
