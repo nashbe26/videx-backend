@@ -64,7 +64,7 @@ const googleStrategy = new GoogleStrategy(options, async (accessToken, refreshTo
 const facebookStrategy = new FacebookStrategy({
     clientID: appId,
     clientSecret: appSecret,
-    callbackURL: 'https://www.audo-videx.com/api/v1/auth/facebook/callback',
+    callbackURL: 'https://www.auto-videx.com/api/v1/auth/facebook/callback',
     profileFields: ['id', 'displayName', 'photos', 'email'], // Specify the profile fields you need
     scope: ['user_photos', 'user_profile'],
     state: true,
