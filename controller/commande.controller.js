@@ -8,7 +8,7 @@ const createCommande = async (req, res) => {
     try {
      
       const nouvelleCommande = new Commande(req.body);
-      const url ="https://admin.audo-videx.com/commande/"+ nouvelleCommande._id
+      const url ="https://admin.auto-videx.com/commande/"+ nouvelleCommande._id
       await qrCodeGenerator.toFile(path.join(__dirname,'..', 'public', 'qrcodes', nouvelleCommande._id+'.png'), url);
       const qrImagePath = 'https://www.auto-videx.com/public/qrcodes/'+nouvelleCommande._id+'.png';
       
