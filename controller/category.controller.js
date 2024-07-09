@@ -1,31 +1,33 @@
-const Category = require('../models/category');
-const Subcategory = require('../models/sub_category');
+const Category = require("../models/category");
+const Subcategory = require("../models/sub_category");
 
 // Controller functions to handle category related operations
 
 // Get all categories
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find({ removed: false });
     res.json(categories);
   } catch (error) {
-    res.status(500).json({ message: 'Error retrieving categories' });
+    res.status(500).json({ message: "Error retrieving categories" });
   }
 };
 
 const getAllCategoriesByType = async (req, res) => {
-    try {
-      let query = { removed: false };
-        if (req.query.type) {
-            query.type = req.query.type;
-        }
-        const categories = await Category.find({type:req.query.type,removed:false});
-        res.json(categories);
-    } catch (error) {
-        res.status(500).json({ message: 'Error retrieving categories' });
+  try {
+    let query = { removed: false };
+    if (req.query.type) {
+      query.type = req.query.type;
     }
+    const categories = await Category.find({
+      type: req.query.type,
+      removed: false,
+    });
+    res.json(categories);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving categories" });
+  }
 };
-
 
 // Create a new category
 const createCategory = async (req, res) => {
@@ -33,17 +35,17 @@ const createCategory = async (req, res) => {
   const { subcategories } = req.body;
 
   try {
-    const category = await Category.create({ name,subcategories });
-    subcategories.map(async x=>{
-      const scategory = await Subcategory.findOne({_id:x});
-      scategory.category = category._id
-      await scategory.save()
-    })
-    
+    const category = await Category.create({ name, subcategories });
+    subcategories.map(async (x) => {
+      const scategory = await Subcategory.findOne({ _id: x });
+      scategory.category = category._id;
+      await scategory.save();
+    });
+
     res.status(201).json(category);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Error creating category' });
+    res.status(500).json({ message: "Error creating category" });
   }
 };
 
@@ -51,13 +53,15 @@ const createCategory = async (req, res) => {
 const getCategoryById = async (req, res) => {
   const { categoryId } = req.params;
   try {
-    const category = await Category.findById(categoryId).populate('subcategories');
+    const category = await Category.findById(categoryId).populate(
+      "subcategories"
+    );
     if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
+      return res.status(404).json({ message: "Category not found" });
     }
     res.json(category);
   } catch (error) {
-    res.status(500).json({ message: 'Error retrieving category' });
+    res.status(500).json({ message: "Error retrieving category" });
   }
 };
 
@@ -70,56 +74,56 @@ const updateCategory = async (req, res) => {
   try {
     const updatedCategory = await Category.findByIdAndUpdate(
       categoryId,
-      { name,subcategories },
+      { name, subcategories },
       { new: true }
     );
     if (!updatedCategory) {
-      return res.status(404).json({ message: 'Category not found' });
+      return res.status(404).json({ message: "Category not found" });
     }
 
     console.log(subcategories);
-    subcategories.map(async x=>{
-      const scategory = await Subcategory.findOne({_id:x});
-      console.log("dsdsdsd",scategory);
-      scategory.category = updatedCategory._id
-      await scategory.save()
+    subcategories.map(async (x) => {
+      const scategory = await Subcategory.findOne({ _id: x });
+      console.log("dsdsdsd", scategory);
+      scategory.category = updatedCategory._id;
+      await scategory.save();
     });
 
     res.json(updatedCategory);
   } catch (error) {
-    res.status(500).json({ message: 'Error updating category' });
+    res.status(500).json({ message: "Error updating category" });
   }
 };
 // Update a category by ID
 const updateSubCategory = async (req, res) => {
-    const { categoryId } = req.params;
-    const { subcategories } = req.body;
-    try {
-      const updatedCategory = await Category.findByIdAndUpdate(
-        categoryId,
-        { $push: { subcategories: { $each: subcategories } } },
-        { new: true }
-      );
+  const { categoryId } = req.params;
+  const { subcategories } = req.body;
+  try {
+    const updatedCategory = await Category.findByIdAndUpdate(
+      categoryId,
+      { $push: { subcategories: { $each: subcategories } } },
+      { new: true }
+    );
 
-      if (!updatedCategory) {
-        return res.status(404).json({ message: 'Category not found' });
-      }
-      res.json(updatedCategory);
-    } catch (error) {
-      res.status(500).json({ message: 'Error updating category' });
+    if (!updatedCategory) {
+      return res.status(404).json({ message: "Category not found" });
     }
-  };
+    res.json(updatedCategory);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating category" });
+  }
+};
 // Delete a category by ID
 const deleteCategory = async (req, res) => {
   const { categoryId } = req.params;
   try {
     const deletedCategory = await Category.findByIdAndDelete(categoryId);
     if (!deletedCategory) {
-      return res.status(404).json({ message: 'Category not found' });
+      return res.status(404).json({ message: "Category not found" });
     }
-    res.json({ message: 'Category deleted successfully' });
+    res.json({ message: "Category deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting category' });
+    res.status(500).json({ message: "Error deleting category" });
   }
 };
 
@@ -130,5 +134,5 @@ module.exports = {
   updateCategory,
   deleteCategory,
   updateSubCategory,
-  getAllCategoriesByType
+  getAllCategoriesByType,
 };
