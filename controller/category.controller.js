@@ -52,10 +52,12 @@ const createCategory = async (req, res) => {
 // Get a single category by ID
 const getCategoryById = async (req, res) => {
   const { categoryId } = req.params;
+  console.log(categoryId);
   try {
-    const category = await Category.findById(categoryId).populate(
-      "subcategories"
-    );
+    const category = await Category.findById(categoryId);
+    // .populate(
+    //   "subcategories"
+    // );
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
