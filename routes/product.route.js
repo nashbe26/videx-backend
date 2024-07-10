@@ -15,6 +15,7 @@ const {
 
 router.get("/get-all", productController.getAllProducts);
 router.get("/get-one/:id", productController.getProductById);
+router.get("/get-one-by-name", productController.getProductByName);
 
 /*
 router.post("/create-product", productController.createProduct);
