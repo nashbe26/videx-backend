@@ -43,22 +43,24 @@ const gegtImagesNames = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const { category } = req.query;
+    const { category, limit = 0 } = req.query;
 
     // If no category is provided, return error
     if (!category) {
       return res.status(400).json({ error: "Category parameter is required" });
     }
 
-    console.log(category);
     // Query the database for products based on category
     const products = await Product.find({
       removed: false,
       enabled: true,
-    }).populate("productCategory");
+    })
+      .limit(limit)
+      .populate("productCategory");
     let arr = products.filter(
       (x) => category === "all" || x.productCategory.type == category
     );
+
     return res.json(arr);
   } catch (err) {
     res.status(500).json({ error: "Failed to retrieve products" });
