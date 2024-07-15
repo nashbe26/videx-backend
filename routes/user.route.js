@@ -15,7 +15,7 @@ router.param("userId", userController.load);
 
 router.get("/get-all-User", authorize(SUPER_ADMIN), userController.getAllUser);
 router.put(
-  "/update-user",
+  "/update",
   authorize([LOGGED_USER, SUPER_ADMIN]),
   userController.updateUser
 );

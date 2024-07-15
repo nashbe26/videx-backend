@@ -25,13 +25,14 @@ const loggedIn = (req, res) => res.json(req.route.meta.user);
 const updateUser = async (req, res, next) => {
   try {
     let modifyUser = req.body;
+    console.log(modifyUser);
 
     let updateUser = await User.findByIdAndUpdate(
       req.route.meta.user._id,
       { ...modifyUser },
       { returnOriginal: false }
     );
-    return res.status(200).json({ user: updateUser });
+    return res.status(200).json(updateUser);
   } catch (err) {
     console.log(err);
     res.status(401).json({ err });
@@ -63,11 +64,9 @@ const addToFav = async (req, res) => {
     let user = await User.findOne(req.route.meta.user._id);
 
     if (user.fav_prod.includes(req.body.id)) {
-      return res
-        .status(400)
-        .json({
-          error: "Vous avez déjà ajouté ce produit dans votre liste de favoris",
-        });
+      return res.status(400).json({
+        error: "Vous avez déjà ajouté ce produit dans votre liste de favoris",
+      });
     }
 
     user.fav_prod.push(req.body.id);
@@ -89,11 +88,9 @@ const deleteToFav = async (req, res) => {
       user.fav_prod.splice(index, 1);
       await user.save();
     } else {
-      return res
-        .status(400)
-        .json({
-          error: "Vous avez déjà ajouté ce produit dans votre liste de favoris",
-        });
+      return res.status(400).json({
+        error: "Vous avez déjà ajouté ce produit dans votre liste de favoris",
+      });
     }
 
     return res.status(200).json({ user });
