@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema({
   removed: {
@@ -9,14 +9,16 @@ const schema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-
+  // brand: {
+  //   type: String,
+  // },
   productCategory: {
     type: mongoose.Schema.ObjectId,
-    ref: 'ProductCategory',
+    ref: "ProductCategory",
     required: true,
     autopopulate: true,
   },
-  suppliers: [{ type: mongoose.Schema.ObjectId, ref: 'Supplier' }],
+  suppliers: [{ type: mongoose.Schema.ObjectId, ref: "Supplier" }],
   name: {
     type: String,
     required: true,
@@ -77,7 +79,7 @@ const schema = new mongoose.Schema({
         type: String,
         trim: true,
         lowercase: true,
-        default: 'string',
+        default: "string",
       },
       fieldValue: {},
     },
@@ -90,12 +92,14 @@ const schema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  remise: { type: Number, default: 0 },
   isPublic: {
     type: Boolean,
     default: true,
   },
 });
 
-schema.plugin(require('mongoose-autopopulate'));
+schema.plugin(require("mongoose-autopopulate"));
 
-module.exports = mongoose.model('Product', schema);
+module.exports = mongoose.model("Product", schema);

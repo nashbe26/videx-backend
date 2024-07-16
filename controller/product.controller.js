@@ -69,40 +69,62 @@ const getAllProducts = async (req, res) => {
 
 const getAllProductsCat = async (req, res) => {
   try {
-    const { price, category, name } = req.query;
+    const { priceMin, priceMax, categoryName, brands, discount } = req.query;
 
-    const filter = {};
+    const query = {};
 
-    if (price) {
-      filter["price"] = { $lte: parseInt(price) };
+    // Add price range to the query if provided
+    if (priceMin !== undefined || priceMax !== undefined) {
+      query.price = {};
+      if (priceMin !== undefined) {
+        query.price.$gte = priceMin;
+      }
+      if (priceMax !== undefined) {
+        query.price.$lte = priceMax;
+      }
     }
-    // Add category filter if provided
-    if (name) {
-      filter["productCategory.type"] = name;
+    // Add category to the query if provided
+    if (categoryName && categoryName !== "all") {
+      const category = await Category.findOne({ name: categoryName });
+
+      if (category) {
+        query.productCategory = category._id;
+      }
     }
 
-    const names = category.split(",");
+    if (discount !== "any") {
+      if (discount === "yes") {
+        query.remise = { $gt: 0 };
+      } else {
+        query.remise = { $not: { $gt: 0 } };
+      }
+    }
+
+    // Add brands to the query if provided
+    // if (brands && brands.length > 0) {
+    //   query.brand = { $in: brands };
+    // }
 
     const products = await Product.find({
-      price: { $lte: parseInt(price) },
-      removed: false,
-      enabled: true,
-    });
+      ...query,
+    }).exec();
 
-    let arr = products.filter((x) => x.productCategory.type == name);
-    console.log(arr, names);
-    if (names.length > 0) {
-      const newArr = [];
+    console.log("products products products");
+    console.log(products);
+    console.log("products products products");
 
-      arr.map((x) => {
-        names.map((y) => {
-          if (y == x.productCategory.name) newArr.push(x);
-        });
-      });
-      return res.json(newArr);
-    } else {
-      return res.json(arr);
-    }
+    return res.json(products);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Failed to retrieve products" });
+  }
+};
+
+const getMinMaxPrice = async (req, res) => {
+  try {
+    const minProds = await Product.find().sort({ price: 1 }).limit(1);
+    const maxProds = await Product.find().sort({ price: -1 }).limit(1);
+    res.json({ min: minProds[0]?.price || 0, max: maxProds[0]?.price || 0 });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Failed to retrieve products" });
@@ -336,4 +358,5 @@ module.exports = {
   deleteImages,
   getAllProductsSub,
   getAllProductsCat,
+  getMinMaxPrice,
 };
