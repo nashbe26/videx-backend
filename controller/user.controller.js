@@ -41,17 +41,33 @@ const updateUser = async (req, res, next) => {
 
 const updateUserPassword = async (req, res, next) => {
   try {
-    let modifyUser = req.body;
-    if (modifyUser.password.length > 0 && modifyUser.password) {
-      const hashedPassword = await bcrypt.hash(modifyUser.password, 10);
-      modifyUser.password = hashedPassword;
+    const user = await User.findOne({ _id: req.route.meta.user._id });
+
+    const { oldPassword, newPassword } = req.body;
+
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isPasswordMatch) {
+      return res.status(400).json({ error: "Old password is incorrect" });
     }
+
+    if (newPassword.length < 6) {
+      return res
+        .status(400)
+        .json({ error: "Password must be at least 6 characters" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
 
     let updateUser = await User.findByIdAndUpdate(
       req.route.meta.user._id,
-      { ...modifyUser },
+      { password: hashedPassword },
       { returnOriginal: false }
     );
+
     return res.status(200).json({ user: updateUser });
   } catch (err) {
     console.log(err);
