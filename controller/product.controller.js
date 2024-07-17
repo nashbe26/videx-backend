@@ -125,10 +125,6 @@ const getAllProductsCat = async (req, res) => {
       .skip(page * limit)
       .exec();
 
-    console.log("products products products");
-    console.log(products);
-    console.log("products products products");
-
     return res.json({ products, nbPages, nbProducts: productsCount });
   } catch (err) {
     console.log(err);
