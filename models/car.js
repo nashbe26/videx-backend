@@ -1,45 +1,42 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const Schema = new mongoose.Schema({
+const Schema = new mongoose.Schema(
+  {
     immat: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
 
-    user_id:
-    {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        autopopulate:true
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      autopopulate: true,
     },
     marque: {
-        type: String,
-
+      type: String,
     },
     model: {
-        type: String,
-
+      type: String,
     },
     fab: {
-        type: String,
-
+      type: String,
     },
     kilo: {
-        type: String,
-
+      type: String,
     },
     enabled: {
-        type: Boolean,
-        default: true
-    }
-    ,
+      type: Boolean,
+      default: true,
+    },
     removed: {
-        type: Boolean,
-        default: false
-    }
-}, {
-    timestamps: true
-});
-Schema.plugin(require('mongoose-autopopulate'));
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+Schema.plugin(require("mongoose-autopopulate"));
 
-module.exports = mongoose.model('Car', Schema);
+module.exports = mongoose.model("Car", Schema);
