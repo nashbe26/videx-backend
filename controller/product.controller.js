@@ -69,7 +69,15 @@ const getAllProducts = async (req, res) => {
 
 const getAllProductsCat = async (req, res) => {
   try {
-    const { priceMin, priceMax, categoryName, brands, discount } = req.query;
+    const {
+      priceMin,
+      priceMax,
+      categoryName,
+      brands,
+      discount,
+      page = 0,
+      limit = 4,
+    } = req.query;
 
     const query = {};
 
@@ -105,15 +113,23 @@ const getAllProductsCat = async (req, res) => {
     //   query.brand = { $in: brands };
     // }
 
+    const productsCount = await Product.countDocuments({
+      ...query,
+    });
+    const nbPages = Math.ceil(productsCount / limit);
+
     const products = await Product.find({
       ...query,
-    }).exec();
+    })
+      .limit(limit)
+      .skip(page * limit)
+      .exec();
 
     console.log("products products products");
     console.log(products);
     console.log("products products products");
 
-    return res.json(products);
+    return res.json({ products, nbPages, nbProducts: productsCount });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Failed to retrieve products" });
