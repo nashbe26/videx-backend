@@ -7,6 +7,9 @@ const commandeSchema = new mongoose.Schema(
       ref: "Car",
       autopopulate: true,
     },
+    orderNumber: {
+      type: Number,
+    },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

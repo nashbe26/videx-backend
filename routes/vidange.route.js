@@ -8,11 +8,18 @@ const {
 const {
   createVidange,
   getVidangeByMyId,
+  getVidangeById,
 } = require("../controller/vidange.controller");
 
 const router = express.Router();
 
 router.post("/create", authorize([LOGGED_USER, SUPER_ADMIN]), createVidange);
+
+router.get(
+  "/get-one/:id",
+  authorize([LOGGED_USER, SUPER_ADMIN]),
+  getVidangeById
+);
 
 router.get(
   "/get-my-vidange",
