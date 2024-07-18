@@ -16,6 +16,7 @@ const {
 router.get("/get-all", productController.getAllProducts);
 router.get("/search-product", productController.getAllProductsCat);
 router.get("/min-max", productController.getMinMaxPrice);
+router.get("/get-all-vidange-products", productController.getVidangeProducts);
 router.get("/get-one/:id", productController.getProductById);
 router.get("/get-one-by-name", productController.getProductByName);
 

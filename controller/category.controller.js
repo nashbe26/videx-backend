@@ -6,7 +6,10 @@ const Subcategory = require("../models/sub_category");
 // Get all categories
 const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find({ removed: false });
+    const categories = await Category.find({
+      removed: false,
+      $nor: [{ name: "Vidange" }],
+    });
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: "Error retrieving categories" });

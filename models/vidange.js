@@ -12,11 +12,6 @@ const commandeSchema = new mongoose.Schema(
       ref: "User",
       autopopulate: true,
     },
-    filtre: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      autopopulate: true,
-    },
     vidange: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",

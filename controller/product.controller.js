@@ -57,11 +57,25 @@ const getAllProducts = async (req, res) => {
     })
       .limit(limit)
       .populate("productCategory");
-    let arr = products.filter(
-      (x) => category === "all" || x.productCategory.type == category
-    );
+    let arr = products
+      .filter((item) => item.name !== "Vidange")
+      .filter((x) => category === "all" || x.productCategory.type == category);
 
     return res.json(arr);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to retrieve products" });
+  }
+};
+
+const getVidangeProducts = async (req, res) => {
+  try {
+    const {} = req.query;
+    // Query the database for products based on category
+    const products = await Product.find();
+
+    return res.json(
+      products.filter((prod) => prod?.productCategory?.name === "Vidange")
+    );
   } catch (err) {
     res.status(500).json({ error: "Failed to retrieve products" });
   }
@@ -81,6 +95,10 @@ const getAllProductsCat = async (req, res) => {
 
     const query = {};
 
+    // eleminate vidange
+    const vidange = await Category.findOne({ name: "Vidange" });
+    query.productCategory = { $ne: vidange._id };
+
     // Add price range to the query if provided
     if (priceMin !== undefined || priceMax !== undefined) {
       query.price = {};
@@ -97,7 +115,13 @@ const getAllProductsCat = async (req, res) => {
 
       if (category) {
         query.productCategory = category._id;
+      } else {
+        const vidange = await Category.findOne({ name: "Vidange" });
+        query.productCategory = { $ne: vidange._id };
       }
+    } else {
+      const vidange = await Category.findOne({ name: "Vidange" });
+      query.productCategory = { $ne: vidange._id };
     }
 
     if (discount !== "any") {
@@ -134,8 +158,17 @@ const getAllProductsCat = async (req, res) => {
 
 const getMinMaxPrice = async (req, res) => {
   try {
-    const minProds = await Product.find().sort({ price: 1 }).limit(1);
-    const maxProds = await Product.find().sort({ price: -1 }).limit(1);
+    const vidange = await Category.findOne({ name: "Vidange" });
+    const minProds = await Product.find({
+      productCategory: { $ne: vidange._id },
+    })
+      .sort({ price: 1 })
+      .limit(1);
+    const maxProds = await Product.find({
+      productCategory: { $ne: vidange._id },
+    })
+      .sort({ price: -1 })
+      .limit(1);
     res.json({ min: minProds[0]?.price || 0, max: maxProds[0]?.price || 0 });
   } catch (err) {
     console.log(err);
@@ -236,7 +269,7 @@ const searchProducts = async (req, res) => {
   const { title, category, subcategory } = req.query;
   try {
     const query = {};
-    console.log(title != "null");
+
     if (title) {
       query.title = title != "null" ? { $regex: title, $options: "i" } : null;
     }
@@ -361,6 +394,7 @@ module.exports = {
   getAllProducts,
   getProductById,
   getProductByName,
+  getVidangeProducts,
   updateProductById,
   deleteProductById,
   searchProducts,

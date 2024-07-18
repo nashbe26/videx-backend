@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const productCategorySchema = new mongoose.Schema({
   removed: {
@@ -9,7 +9,6 @@ const productCategorySchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-
   name: {
     type: String,
     required: true,
@@ -27,7 +26,7 @@ const productCategorySchema = new mongoose.Schema({
   },
   parentCategory: {
     type: mongoose.Schema.ObjectId,
-    ref: 'ProductCategory',
+    ref: "ProductCategory",
   },
 
   title: String,
@@ -74,4 +73,4 @@ const productCategorySchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('ProductCategory', productCategorySchema);
+module.exports = mongoose.model("ProductCategory", productCategorySchema);
