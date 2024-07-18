@@ -1,4 +1,6 @@
 const Vidange = require("../models/vidange");
+const qrCodeGenerator = require("qrcode");
+const path = require("path");
 
 const createVidange = async (req, res) => {
   try {
@@ -16,6 +18,24 @@ const createVidange = async (req, res) => {
     } else {
       nouvelleVidange.orderNumber = 1;
     }
+
+    const url = "https://admin.auto-videx.com/vidange/" + nouvelleVidange._id;
+    await qrCodeGenerator.toFile(
+      path.join(
+        __dirname,
+        "..",
+        "public",
+        "qrcodes",
+        nouvelleVidange._id + ".png"
+      ),
+      url
+    );
+    const qrImagePath =
+      "https://www.auto-videx.com/public/qrcodes/" +
+      nouvelleVidange._id +
+      ".png";
+
+    nouvelleVidange.qr_code = qrImagePath;
 
     const vidange = await nouvelleVidange.save();
 

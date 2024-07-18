@@ -10,6 +10,9 @@ const commandeSchema = new mongoose.Schema(
     orderNumber: {
       type: Number,
     },
+    qr_code: {
+      type: String,
+    },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
