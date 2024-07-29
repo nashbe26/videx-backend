@@ -67,6 +67,44 @@ const getAllProducts = async (req, res) => {
   }
 };
 
+const getRandomProducts = async (req, res) => {
+  try {
+    const { category, limit = 0 } = req.query;
+
+    // If no category is provided, return error
+    if (!category) {
+      return res.status(400).json({ error: "Category parameter is required" });
+    }
+
+    // Query the database for the count of products based on category
+    const count = await Product.countDocuments({
+      removed: false,
+      enabled: true,
+      ...(category !== "all" && { "productCategory.type": category }),
+    });
+
+    // Generate a random skip value
+    const skip = Math.floor(Math.random() * Math.max(count - limit, 0));
+
+    // Query the database for products based on category with skip and limit
+    const products = await Product.find({
+      removed: false,
+      enabled: true,
+      ...(category !== "all" && { "productCategory.type": category }),
+    })
+      .skip(skip)
+      .limit(limit)
+      .populate("productCategory");
+
+    // Filter out products named "Vidange"
+    const arr = products.filter((item) => item.name !== "Vidange");
+
+    return res.json(arr);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to retrieve products" });
+  }
+};
+
 const getVidangeProducts = async (req, res) => {
   try {
     const {} = req.query;
@@ -392,6 +430,7 @@ const deleteImages = async (req, res) => {
 module.exports = {
   createProduct,
   getAllProducts,
+  getRandomProducts,
   getProductById,
   getProductByName,
   getVidangeProducts,

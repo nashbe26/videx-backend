@@ -14,6 +14,7 @@ const {
 } = require("../utils/multer");
 
 router.get("/get-all", productController.getAllProducts);
+router.get("/get-random", productController.getRandomProducts);
 router.get("/search-product", productController.getAllProductsCat);
 router.get("/min-max", productController.getMinMaxPrice);
 router.get("/get-all-vidange-products", productController.getVidangeProducts);
